@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Form from "./Form";
 
 const FetchGRDs = () => {
   const [data, setData] = useState({
@@ -44,6 +45,7 @@ const FetchGRDs = () => {
 
   return (
     <>
+      <Form />
       <div className="container d-flex justify-content-center">
         <table className="table table-striped table-bordered">
           <thead>
