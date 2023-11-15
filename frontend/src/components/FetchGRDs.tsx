@@ -44,19 +44,23 @@ const FetchGRDs = () => {
 
   return (
     <>
-      <div>
-        <table>
+      <div className="container d-flex justify-content-center">
+        <table className="table table-striped table-bordered">
           <thead>
-            <tr>
+            <tr style={{ backgroundColor: "lightblue" }}>
               {Object.entries(data).map(([key, values], index) => (
-                <td key={index}>{key}</td>
+                <th scope="col" key={index}>
+                  {key}
+                </th>
               ))}
             </tr>
           </thead>
           <tbody>
             {/* data.A[0], data.B[0], etc. */}
             {/* data.A[1], data.B[1], etc. */}
-            {Array.from({ length: 15 }).map((_, row) => (
+            {(data as Record<string, number[] | string[]>)[
+              Object.keys(data)[0]
+            ].map((_, row) => (
               <tr key={row}>
                 {Object.entries(data).map(([key, values], col) => (
                   <td key={col}>
