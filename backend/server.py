@@ -14,12 +14,6 @@ json = df.to_json()
 
 @app.route('/data')
 def get_grds():
-    data = {
-        'name':"geek", 
-        "age":"22",
-        "date":"1/2/2020", 
-        "programming":"python"
-        }
     return json
 
 if __name__ == '__main__':

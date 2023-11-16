@@ -22,10 +22,6 @@ const Form = () => {
     setDep(depIn?.value || "");
     setCourse(courseIn?.value || "");
     setProf(profIn?.value || "");
-
-    depIn.value = "";
-    courseIn.value = "";
-    profIn.value = "";
   };
 
   return (
@@ -33,27 +29,17 @@ const Form = () => {
       <form action="" onSubmit={getData}>
         <div className="container d-flex align-items-center">
           <div className="mb-3 col-auto" style={{ paddingRight: 30 }}>
-            <label className="required-label" htmlFor="inputDep">
-              Department (CSCE, ARCH, etc.)
-            </label>
+            <label htmlFor="inputDep">Department (CSCE, ARCH, etc.)</label>
             <input
               className="form-control"
               id="inputDep"
               type="text"
               placeholder=""
-              required
             />
           </div>
           <div className="mb-3 col-auto">
-            <label className="required-label" htmlFor="inputCourse">
-              Course Number (120, 301, etc.)
-            </label>
-            <input
-              className="form-control"
-              id="inputCourse"
-              type="text"
-              required
-            />
+            <label htmlFor="inputCourse">Course Number (120, 301, etc.)</label>
+            <input className="form-control" id="inputCourse" type="text" />
           </div>
           <div className="mb-3 col-auto">
             <label htmlFor="inputProf">
@@ -77,7 +63,11 @@ const Form = () => {
           </div>
         </div>
       </form>
-      <FetchGRDs />
+      <FetchGRDs
+        dep={dep.toUpperCase()}
+        course={course}
+        prof={prof.toUpperCase()}
+      />
     </>
   );
 };

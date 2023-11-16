@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from "react";
 import Form from "./Form";
 
-const FetchGRDs = () => {
+interface Props {
+  dep: string;
+  course: string;
+  prof: string;
+}
+
+const FetchGRDs = ({ dep, course, prof }: Props) => {
   const [data, setData] = useState({
+    COURSE: [""],
+    PROF: [""],
+    GPA: [0],
     A: [0],
     B: [0],
     C: [0],
     D: [0],
     F: [0],
-    GPA: [0],
+    "A (%)": [0],
+    "B (%)": [0],
+    "C (%)": [0],
+    "D (%)": [0],
+    "F (%)": [0],
     Q: [0],
-    TOTAL: [0],
-    INSTRUCTOR: [""],
-    A_PER: [0],
-    B_PER: [0],
-    C_PER: [0],
-    D_PER: [0],
-    F_PER: [0],
-    COURSE: [""],
   });
 
   useEffect(() => {
@@ -30,10 +35,12 @@ const FetchGRDs = () => {
         const result = await res.json();
 
         Object.entries(data).forEach(([key, values]) => {
-          setData((prevData) => ({
-            ...prevData,
-            [key]: Object.values(result[key]),
-          }));
+          if (result.hasOwnProperty(key)) {
+            setData((prevData) => ({
+              ...prevData,
+              [key]: Object.values(result[key]),
+            }));
+          }
         });
       } catch (error) {
         console.error(error);
@@ -43,9 +50,30 @@ const FetchGRDs = () => {
     fetchData();
   }, []);
 
+  const displayData = (row: number, col: number, key: string) => {
+    if (
+      dep !== "" &&
+      course !== "" &&
+      data.COURSE[row] === dep + " " + course
+    ) {
+      if (data.PROF[row].includes(prof) || prof === "") {
+        return (
+          <td key={col}>
+            {(data as Record<string, number[] | string[]>)[key][row]}
+          </td>
+        );
+      }
+    } else if (data.PROF[row].includes(prof) || prof === "") {
+      return (
+        <td key={col}>
+          {(data as Record<string, number[] | string[]>)[key][row]}
+        </td>
+      );
+    }
+  };
+
   return (
     <>
-      <Form />
       <div className="container d-flex justify-content-center">
         <table className="table table-striped table-bordered">
           <thead>
@@ -64,11 +92,9 @@ const FetchGRDs = () => {
               Object.keys(data)[0]
             ].map((_, row) => (
               <tr key={row}>
-                {Object.entries(data).map(([key, values], col) => (
-                  <td key={col}>
-                    {(data as Record<string, number[] | string[]>)[key][row]}
-                  </td>
-                ))}
+                {Object.entries(data).map(([key, values], col) =>
+                  displayData(row, col, key)
+                )}
               </tr>
             ))}
           </tbody>
