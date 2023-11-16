@@ -124,9 +124,15 @@ const FetchGRDs = ({ dep, course, prof }: Props) => {
         </div>
       </>
     );
-  } else {
+  } else if (dep !== "" || course !== "" || prof !== "") {
     return (
       <div style={{ fontSize: 20 }}>No data found. Check your inputs?</div>
+    );
+  } else {
+    return (
+      <div style={{ fontSize: 20 }}>
+        Search by department + course, and/or professor.
+      </div>
     );
   }
 };
