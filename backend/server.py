@@ -35,8 +35,6 @@ def get_grds():
     course = request.args.get('course')
     prof = request.args.get('prof')
 
-    print(dep, course, prof)
-
     query = {}
     if dep and course: query['COURSE'] = dep + " " + course
     if prof: query['PROF'] = { '$regex': prof }
