@@ -38,8 +38,6 @@ const FetchGRDs = ({ dep, course, prof }: Props) => {
         setData(result);
         setHeaders(Object.keys(result[0]));
 
-        console.log(result);
-
         // Object.entries(data).forEach(([key, values]) => {
         //   if (result.hasOwnProperty(key)) {
         //     setData((prevData) => ({
