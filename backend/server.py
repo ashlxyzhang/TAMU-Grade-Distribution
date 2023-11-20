@@ -2,7 +2,6 @@ from flask import Flask, request
 from flask_cors import CORS
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-# from rmp_scraper.RMPClass import RateMyProfScraper
 from bson import json_util
 import os
 
@@ -14,7 +13,8 @@ uri = f"mongodb://{os.environ.get('MONGO_USER')}:{os.environ.get('MONGO_PASS')}@
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
 db = client['TAMUgrds']
-collection = db['grds']
+grds = db['grds']
+profs = db['profLinks']
 
 # Send a ping to confirm a successful connection
 try:
@@ -40,15 +40,11 @@ def get_grds():
     if dep and course: query['COURSE'] = dep + " " + course
     if prof: query['PROF'] = { '$regex': prof }
 
-    return json_util.dumps(list(collection.find(query))) if query != {} else []
+    return json_util.dumps(list(grds.find(query))) if query != {} else []
 
-# tamu = RateMyProfScraper(1003)
-# tamu.SearchProfessor("Chamon")
-# tamu.PrintProfessorDetail("overall_rating")
-
-# @app.route('/profs')
-# def get_rmp_profs():
-
+@app.route('/profs')
+def get_profs():
+    return json_util.dumps(list(profs.find({})))
 
 if __name__ == '__main__':
     app.run(debug=True)

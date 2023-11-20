@@ -9,6 +9,8 @@ interface Props {
 const FetchGRDs = ({ dep, course, prof }: Props) => {
   const [data, setData] = useState([]);
   const [headers, setHeaders] = useState([""]);
+  const [profLinks, setProfLinks] = useState();
+
   //   COURSE: [""],
   //   PROF: [""],
   //   GPA: [0],
@@ -54,6 +56,28 @@ const FetchGRDs = ({ dep, course, prof }: Props) => {
     fetchData();
   }, [dep, course, prof]);
 
+  useEffect(() => {
+    const getProfLink = async () => {
+      try {
+        const res = await fetch("http://127.0.0.1:5000/profs");
+        if (!res.ok) {
+          throw new Error("Data not fetched");
+        }
+        const result = await res.json();
+        const profDict = result.reduce((acc: any, prof: any) => {
+          acc[prof.NAME] = prof.LINK;
+          return acc;
+        }, {});
+
+        setProfLinks(profDict);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getProfLink();
+  }, []);
+
   // const displayData = (row: number, col: number, key: string) => {
   //   if (dep === "" && course === "" && prof === "") {
   //     return "";
@@ -79,6 +103,27 @@ const FetchGRDs = ({ dep, course, prof }: Props) => {
   //   }
   // };
 
+  const displayData = (header: string, col: number, record: any) => {
+    if (header !== "_id") {
+      if (profLinks !== undefined) {
+        if (header === "PROF" && profLinks[record[header]] !== "") {
+          return (
+            <td key={col}>
+              <a
+                href={profLinks[record[header]]}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {record[header]}
+              </a>
+            </td>
+          );
+        }
+      }
+      return <td key={col}>{record[header]}</td>;
+    }
+  };
+
   if (data.length !== 0) {
     return (
       <>
@@ -100,9 +145,9 @@ const FetchGRDs = ({ dep, course, prof }: Props) => {
             <tbody>
               {data.map((record, row) => (
                 <tr key={row}>
-                  {headers.map(
-                    (header, col) =>
-                      header !== "_id" && <td key={col}>{record[header]}</td>
+                  {headers.map((header, col) =>
+                    // header !== "_id" && <td key={col}>{record[header]}</td>
+                    displayData(header, col, record)
                   )}
                 </tr>
               ))}
